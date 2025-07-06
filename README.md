@@ -23,7 +23,7 @@ The app includes the following features:
 --------------------------------------------------------
 
 1. Clone the Repository:
-   git clone https://github.com/YOUR_USERNAME/dental-center-dashboard.git
+   git clone https://github.com/AGGajarajan/dental-center-management.git
 
 2. Navigate to the Project Folder:
    cd dental-center-dashboard
