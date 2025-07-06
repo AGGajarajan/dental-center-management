@@ -24,7 +24,7 @@ const AddIncident = () => {
 
   const handleChange = e => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = e => {
@@ -42,9 +42,16 @@ const AddIncident = () => {
     });
   };
 
+  const removeFile = name => {
+    setFormData(prev => ({
+      ...prev,
+      files: prev.files.filter(f => f.name !== name)
+    }));
+  };
+
   const handleSubmit = e => {
     e.preventDefault();
-    const db = JSON.parse(localStorage.getItem('db'));
+    const db = JSON.parse(localStorage.getItem('db')) || { incidents: [], patients: [] };
 
     const newIncident = {
       id: 'i' + (db.incidents.length + 1),
@@ -64,134 +71,166 @@ const AddIncident = () => {
     navigate('/incidents');
   };
 
-  const removeFile = name => {
-    setFormData(prev => ({
-      ...prev,
-      files: prev.files.filter(f => f.name !== name)
-    }));
-  };
-
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-md shadow-md">
-      <h2 className="text-2xl font-semibold mb-6 text-gray-800">Add Incident</h2>
+    <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-lg my-8">
+      <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+        Add New Incident
+      </h2>
+
       <form onSubmit={handleSubmit} className="space-y-6">
-        <select
-          name="patientId"
-          value={formData.patientId}
-          onChange={handleChange}
-          required
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
-          <option value="">Select Patient</option>
-          {patients.map(p => (
-            <option key={p.id} value={p.id}>
-              {p.name}
-            </option>
-          ))}
-        </select>
+        <label className="block">
+          <span className="text-gray-700 font-semibold mb-1 block">Select Patient *</span>
+          <select
+            name="patientId"
+            value={formData.patientId}
+            onChange={handleChange}
+            required
+            className="w-full rounded-md border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
+          >
+            <option value="">-- Choose Patient --</option>
+            {patients.map(p => (
+              <option key={p.id} value={p.id}>
+                {p.name}
+              </option>
+            ))}
+          </select>
+        </label>
 
-        <input
-          name="title"
-          placeholder="Title"
-          value={formData.title}
-          onChange={handleChange}
-          required
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
+        <label className="block">
+          <span className="text-gray-700 font-semibold mb-1 block">Title *</span>
+          <input
+            type="text"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            placeholder="Incident Title"
+            required
+            className="w-full rounded-md border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
+          />
+        </label>
 
-        <textarea
-          name="description"
-          placeholder="Description"
-          value={formData.description}
-          onChange={handleChange}
-          required
-          rows={4}
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
+        <label className="block">
+          <span className="text-gray-700 font-semibold mb-1 block">Description *</span>
+          <textarea
+            name="description"
+            rows={4}
+            value={formData.description}
+            onChange={handleChange}
+            placeholder="Describe the incident"
+            required
+            className="w-full rounded-md border border-gray-300 p-3 resize-y focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
+          />
+        </label>
 
-        <textarea
-          name="comments"
-          placeholder="Comments"
-          value={formData.comments}
-          onChange={handleChange}
-          rows={3}
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
+        <label className="block">
+          <span className="text-gray-700 font-semibold mb-1 block">Comments</span>
+          <textarea
+            name="comments"
+            rows={3}
+            value={formData.comments}
+            onChange={handleChange}
+            placeholder="Additional comments (optional)"
+            className="w-full rounded-md border border-gray-300 p-3 resize-y focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
+          />
+        </label>
 
-        <input
-          type="datetime-local"
-          name="appointmentDate"
-          value={formData.appointmentDate}
-          onChange={handleChange}
-          required
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <label className="block">
+            <span className="text-gray-700 font-semibold mb-1 block">Appointment Date *</span>
+            <input
+              type="datetime-local"
+              name="appointmentDate"
+              value={formData.appointmentDate}
+              onChange={handleChange}
+              required
+              className="w-full rounded-md border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
+            />
+          </label>
 
-        <input
-          type="number"
-          name="cost"
-          placeholder="Cost"
-          value={formData.cost}
-          onChange={handleChange}
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
+          <label className="block">
+            <span className="text-gray-700 font-semibold mb-1 block">Cost</span>
+            <input
+              type="number"
+              name="cost"
+              min="0"
+              step="0.01"
+              value={formData.cost}
+              onChange={handleChange}
+              placeholder="₹0.00"
+              className="w-full rounded-md border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
+            />
+          </label>
+        </div>
 
-        <select
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
-          <option value="">Select Status</option>
-          <option value="Pending">Pending</option>
-          <option value="Completed">Completed</option>
-        </select>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <label className="block">
+            <span className="text-gray-700 font-semibold mb-1 block">Status</span>
+            <select
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              className="w-full rounded-md border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
+            >
+              <option value="">-- Select Status --</option>
+              <option value="Pending">Pending</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </label>
 
-        <input
-          type="date"
-          name="nextDate"
-          value={formData.nextDate}
-          onChange={handleChange}
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
+          <label className="block">
+            <span className="text-gray-700 font-semibold mb-1 block">Next Appointment Date</span>
+            <input
+              type="date"
+              name="nextDate"
+              value={formData.nextDate}
+              onChange={handleChange}
+              className="w-full rounded-md border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
+            />
+          </label>
+        </div>
 
-        <input
-          type="file"
-          multiple
-          onChange={handleFileChange}
-          className="w-full text-gray-700"
-        />
+        <label className="block">
+          <span className="text-gray-700 font-semibold mb-1 block">Upload Files</span>
+          <input
+            type="file"
+            multiple
+            onChange={handleFileChange}
+            className="w-full text-gray-700"
+          />
+        </label>
 
         {/* File preview */}
-        <div className="mt-2 space-y-2">
-          {formData.files.map(f => (
+        <div className="mt-3 space-y-2">
+          {formData.files.map(file => (
             <div
-              key={f.name}
+              key={file.name}
               className="flex items-center justify-between bg-gray-100 rounded-md p-2"
             >
-              <span className="truncate max-w-xs">{f.name}</span>
+              <span className="truncate max-w-xs text-gray-800">{file.name}</span>
               <button
                 type="button"
-                onClick={() => removeFile(f.name)}
-                className="text-red-500 hover:text-red-700"
+                onClick={() => removeFile(file.name)}
+                className="text-red-600 hover:text-red-800 font-semibold transition"
+                aria-label={`Remove file ${file.name}`}
               >
-                Remove
+                ✕ Remove
               </button>
             </div>
           ))}
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4 mt-8 justify-center">
           <button
             type="submit"
-            className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition"
+            className="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-semibold rounded-md shadow-md transition"
           >
             Add Incident
           </button>
+
           <button
             type="button"
             onClick={() => navigate('/incidents')}
-            className="bg-gray-300 text-gray-800 px-6 py-3 rounded-md hover:bg-gray-400 transition"
+            className="w-full sm:w-auto px-8 py-3 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition"
           >
             Cancel
           </button>

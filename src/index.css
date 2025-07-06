@@ -58,6 +58,12 @@ button:focus-visible {
   transition: all 0.3s ease;
 }
 
+/* In src/index.css or tailwind layer */
+.nav-link {
+  @apply text-gray-700 hover:text-blue-700 transition text-left;
+}
+
+
 
 @media (prefers-color-scheme: light) {
   :root {

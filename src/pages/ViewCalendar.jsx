@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import { useNavigate } from 'react-router-dom';
+
 const ViewCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
@@ -60,36 +61,40 @@ const ViewCalendar = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex flex-col md:flex-row min-h-screen">
       <Sidebar />
-      <main className="flex-1 bg-gray-50 min-h-screen p-6">
-        <div className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-2xl font-semibold mb-4">📅 Appointment Calendar</h2>
+      <main className="flex-1 bg-gray-50 p-4 sm:p-6">
+        <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6">
+          <h2 className="text-2xl font-bold text-blue-800 mb-6">📅 Appointment Calendar</h2>
 
+          {/* Navigation */}
           <div className="flex justify-between items-center mb-4">
             <button
               onClick={prevMonth}
-              className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
+              className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm sm:text-base"
             >
               &lt; Prev
             </button>
-            <h3 className="text-lg font-medium">
-              {currentDate.toLocaleString('default', { month: 'long' })}{' '}
-              {currentDate.getFullYear()}
+            <h3 className="text-lg font-medium text-gray-700">
+              {currentDate.toLocaleString('default', { month: 'long' })} {currentDate.getFullYear()}
             </h3>
             <button
               onClick={nextMonth}
-              className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
+              className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm sm:text-base"
             >
               Next &gt;
             </button>
           </div>
 
-          <div className="grid grid-cols-7 gap-2 mb-4 text-center">
+          {/* Weekdays */}
+          <div className="grid grid-cols-7 gap-1 text-center text-sm text-gray-500 font-medium mb-1">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
-              <div key={d} className="text-sm font-medium text-gray-600">{d}</div>
+              <div key={d}>{d}</div>
             ))}
+          </div>
 
+          {/* Days Grid */}
+          <div className="grid grid-cols-7 gap-2 mb-6">
             {calendarDays.map((day, idx) => {
               const hasAppt = day && incidents.some((i) => {
                 const date = new Date(i.appointmentDate);
@@ -109,10 +114,10 @@ const ViewCalendar = () => {
                 <div
                   key={idx}
                   onClick={() => handleDayClick(day)}
-                  className={`w-full h-16 flex items-center justify-center border rounded-md cursor-pointer transition
+                  className={`h-14 sm:h-16 flex items-center justify-center border rounded-md text-sm cursor-pointer transition-all
                     ${day ? 'bg-white hover:shadow-md' : 'bg-transparent cursor-default'}
-                    ${hasAppt ? 'border-blue-500 text-blue-600 font-semibold' : 'border-gray-200'}
-                    ${isSelected ? 'bg-blue-100 shadow-md' : ''}`}
+                    ${hasAppt ? 'border-blue-500 text-blue-600 font-semibold' : 'border-gray-300'}
+                    ${isSelected ? 'bg-blue-100 ring-2 ring-blue-400' : ''}`}
                 >
                   {day || ''}
                 </div>
@@ -120,40 +125,47 @@ const ViewCalendar = () => {
             })}
           </div>
 
-          <div className="bg-gray-50 p-4 rounded-md shadow-inner">
-            <h3 className="text-lg font-semibold mb-2">
+          {/* Appointments */}
+          <div className="bg-blue-50 p-4 rounded-md border border-blue-200">
+            <h3 className="text-lg font-semibold text-blue-800 mb-2">
               {selectedDate
-                ? `Appointments on ${selectedDate.toDateString()}`
-                : 'Click a day to view appointments'}
+                ? `🗓 Appointments on ${selectedDate.toDateString()}`
+                : 'Click a date to see appointments'}
             </h3>
 
             {appointmentsForDay.length === 0 && selectedDate ? (
-              <p className="text-gray-500">No appointments on this day.</p>
+              <p className="text-gray-500">No appointments found.</p>
             ) : (
-              <ul className="space-y-3">
+              <ul className="space-y-4">
                 {appointmentsForDay.map((a) => (
                   <li
                     key={a.id}
-                    className="p-3 border rounded shadow-sm bg-white hover:shadow-md transition"
+                    className="bg-white p-4 rounded-md shadow-sm border hover:shadow-md transition"
                   >
-                    <strong className="text-blue-600">{a.title}</strong> at{' '}
-                    {new Date(a.appointmentDate).toLocaleTimeString([], {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                    <p className="text-sm text-gray-700">{a.description}</p>
+                    <h4 className="font-semibold text-blue-700 mb-1">{a.title}</h4>
+                    <p className="text-sm text-gray-700">
+                      🕒{' '}
+                      {new Date(a.appointmentDate).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </p>
+                    <p className="text-gray-600 text-sm mt-1">{a.description}</p>
                   </li>
                 ))}
               </ul>
             )}
           </div>
+
+          <div className="mt-6">
+            <button
+              onClick={() => navigate('/')}
+              className="text-indigo-600 hover:underline text-sm"
+            >
+              ⬅ Back to Dashboard
+            </button>
+          </div>
         </div>
-        <button
-        className="mt-6 px-6 py-2 bg-white-300 text-gray-800 rounded-md hover:bg-gray-400 transition"
-        onClick={() => navigate('/')}
-      >
-        ⬅ Back to Dashboard
-      </button>
       </main>
     </div>
   );

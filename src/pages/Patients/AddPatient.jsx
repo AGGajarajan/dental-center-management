@@ -11,12 +11,12 @@ const AddPatient = () => {
   });
 
   const handleChange = e => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    const db = JSON.parse(localStorage.getItem('db'));
+    const db = JSON.parse(localStorage.getItem('db')) || { patients: [] };
     const newPatient = {
       id: 'p' + (db.patients.length + 1),
       ...formData
@@ -27,56 +27,73 @@ const AddPatient = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white rounded-md shadow-md">
-      <h2 className="text-2xl font-semibold mb-6 text-gray-800">Add Patient</h2>
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <input
-          name="name"
-          placeholder="Full Name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
+    <div className="max-w-xl mx-auto p-8 bg-white rounded-xl shadow-lg my-10">
+      <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+        Add New Patient
+      </h2>
 
-        <input
-          type="date"
-          name="dob"
-          value={formData.dob}
-          onChange={handleChange}
-          required
-          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <label className="block">
+          <span className="text-gray-700 font-semibold mb-1 block">Full Name *</span>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Enter full name"
+            required
+            className="w-full rounded-md border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+          />
+        </label>
 
-        <input
-          name="contact"
-          placeholder="Contact Number"
-          value={formData.contact}
-          onChange={handleChange}
-          required
-          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
+        <label className="block">
+          <span className="text-gray-700 font-semibold mb-1 block">Date of Birth *</span>
+          <input
+            type="date"
+            name="dob"
+            value={formData.dob}
+            onChange={handleChange}
+            required
+            className="w-full rounded-md border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+          />
+        </label>
 
-        <textarea
-          name="healthInfo"
-          placeholder="Health Info"
-          value={formData.healthInfo}
-          onChange={handleChange}
-          rows={3}
-          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
+        <label className="block">
+          <span className="text-gray-700 font-semibold mb-1 block">Contact Number *</span>
+          <input
+            type="tel"
+            name="contact"
+            value={formData.contact}
+            onChange={handleChange}
+            placeholder="+91 12345 67890"
+            required
+            className="w-full rounded-md border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+          />
+        </label>
 
-        <div className="flex justify-end gap-4">
+        <label className="block">
+          <span className="text-gray-700 font-semibold mb-1 block">Health Information</span>
+          <textarea
+            name="healthInfo"
+            value={formData.healthInfo}
+            onChange={handleChange}
+            rows={4}
+            placeholder="Enter any relevant health info"
+            className="w-full rounded-md border border-gray-300 p-3 resize-y focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+          />
+        </label>
+
+        <div className="flex flex-col sm:flex-row justify-end gap-4 mt-8">
           <button
             type="submit"
-            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
+            className="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold rounded-md shadow-md transition"
           >
-            Add
+            Add Patient
           </button>
           <button
             type="button"
             onClick={() => navigate('/patients')}
-            className="bg-gray-300 text-gray-800 px-6 py-2 rounded-md hover:bg-gray-400 transition"
+            className="w-full sm:w-auto px-8 py-3 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition"
           >
             Cancel
           </button>

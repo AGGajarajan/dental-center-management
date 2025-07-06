@@ -41,12 +41,16 @@ const Dashboard = () => {
         {user?.role === 'Admin' && (
           <div className="flex flex-wrap gap-4 mb-6">
             {['/patients', '/incidents', '/calendar'].map((path, i) => {
-              const labels = ['👥 Manage Patients', '🦷 Manage Incidents', '📅 View Calendar'];
+              const labels = [
+                '👥 Manage Patients',
+                '🦷 Manage Incidents',
+                '📅 View Calendar',
+              ];
               return (
                 <button
                   key={path}
                   onClick={() => navigate(path)}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md shadow-md hover:shadow-xl hover:-translate-y-1 transform transition duration-300"
+                  className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white px-5 py-2 rounded-md shadow-md hover:shadow-xl hover:-translate-y-1 transform transition duration-300"
                 >
                   {labels[i]}
                 </button>
@@ -56,32 +60,43 @@ const Dashboard = () => {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[{
-            title: 'Upcoming Appointments',
-            content: appointments.length === 0 ? (
-              <p className="text-gray-500">No upcoming appointments</p>
-            ) : (
-              <ul className="space-y-1 text-sm text-gray-700">
-                {appointments.map((appt) => (
-                  <li key={appt.id}>
-                    <span className="font-medium">{appt.title}</span> on{' '}
-                    {new Date(appt.appointmentDate).toLocaleString()}
-                  </li>
-                ))}
-              </ul>
-            ),
-          }, {
-            title: 'Revenue',
-            content: <p className="text-2xl font-bold text-green-600">${revenue}</p>,
-          }, {
-            title: 'Pending Treatments',
-            content: <p className="text-2xl font-bold text-red-600">{pending}</p>,
-          }].map(({ title, content }) => (
+          {[
+            {
+              title: 'Upcoming Appointments',
+              content:
+                appointments.length === 0 ? (
+                  <p className="text-gray-500">No upcoming appointments</p>
+                ) : (
+                  <ul className="space-y-1 text-sm text-gray-700 max-h-56 overflow-auto">
+                    {appointments.map((appt) => (
+                      <li key={appt.id}>
+                        <span className="font-medium">{appt.title}</span> on{' '}
+                        {new Date(appt.appointmentDate).toLocaleString()}
+                      </li>
+                    ))}
+                  </ul>
+                ),
+            },
+            {
+              title: 'Revenue',
+              content: (
+                <p className="text-3xl font-bold text-green-600">
+                  ${revenue.toFixed(2)}
+                </p>
+              ),
+            },
+            {
+              title: 'Pending Treatments',
+              content: (
+                <p className="text-3xl font-bold text-red-600">{pending}</p>
+              ),
+            },
+          ].map(({ title, content }) => (
             <div
               key={title}
-              className="bg-white rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transform transition duration-300 p-4 cursor-default"
+              className="bg-white rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transform transition duration-300 p-6 cursor-default"
             >
-              <h3 className="text-lg font-semibold text-gray-700 mb-2">{title}</h3>
+              <h3 className="text-lg font-semibold text-gray-700 mb-3">{title}</h3>
               {content}
             </div>
           ))}

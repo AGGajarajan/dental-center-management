@@ -30,13 +30,14 @@ const PatientList = () => {
           <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">Patients</h2>
           <button
             onClick={() => navigate('/patients/add')}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-sm"
+            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-5 py-2 rounded-md shadow-md transition text-sm sm:text-base"
           >
             ➕ Add Patient
           </button>
         </div>
 
-        <div className="overflow-x-auto rounded-lg shadow-md">
+        {/* Responsive scrollable table container */}
+        <div className="overflow-x-auto rounded-lg shadow-md border border-gray-200">
           <table className="min-w-full divide-y divide-gray-200 text-sm sm:text-base">
             <thead className="bg-gray-100">
               <tr>
@@ -50,27 +51,27 @@ const PatientList = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {patients.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="text-center py-4 text-gray-500">
+                  <td colSpan="5" className="text-center py-6 text-gray-500 italic">
                     No patients found.
                   </td>
                 </tr>
               ) : (
                 patients.map(p => (
                   <tr key={p.id} className="hover:bg-gray-50 transition">
-                    <td className="px-4 py-3">{p.name}</td>
+                    <td className="px-4 py-3 max-w-xs truncate">{p.name}</td>
                     <td className="px-4 py-3">{p.dob}</td>
                     <td className="px-4 py-3">{p.contact}</td>
-                    <td className="px-4 py-3">{p.healthInfo}</td>
-                    <td className="px-4 py-3 flex flex-wrap gap-2">
+                    <td className="px-4 py-3 max-w-sm truncate">{p.healthInfo}</td>
+                    <td className="px-4 py-3 flex flex-wrap gap-3 justify-start sm:justify-end">
                       <button
                         onClick={() => navigate(`/patients/edit/${p.id}`)}
-                        className="px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500 text-xs sm:text-sm"
+                        className="px-4 py-2 bg-yellow-400 text-white rounded-md hover:bg-yellow-500 transition text-xs sm:text-sm"
                       >
                         ✏️ Edit
                       </button>
                       <button
                         onClick={() => deletePatient(p.id)}
-                        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs sm:text-sm"
+                        className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition text-xs sm:text-sm"
                       >
                         🗑️ Delete
                       </button>
@@ -85,7 +86,7 @@ const PatientList = () => {
         <div className="mt-6">
           <button
             onClick={() => navigate('/')}
-            className="text-blue-600 hover:underline text-sm"
+            className="text-indigo-600 hover:underline text-sm sm:text-base font-semibold"
           >
             ⬅ Back to Dashboard
           </button>
