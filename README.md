@@ -109,8 +109,8 @@ You can inspect and modify data using browser DevTools > Application > LocalStor
 
 Login Credentials:
 ------------------
-Admin: `admin@example.com` / `admin123`
-Patient: `patient@example.com` / `patient123`
+Admin: `admin@entnt.com` / `admin123`
+Patient: `john@entnt.com` / `patient123`
 
 ========================================================
 📁 SAMPLE FOLDER STRUCTURE
@@ -143,22 +143,18 @@ src/
 ├── main.jsx
 └── routes.jsx
 
-========================================================
-🚀 DEPLOYMENT INSTRUCTIONS (OPTIONAL)
+=======================================================
+🏁 SUMMARY
 --------------------------------------------------------
+- This Dental Center Dashboard application offers:
 
-1. Build the app:
-   npm run build
+- Robust patient and appointment management
 
-2. Deploy to GitHub Pages / Netlify / Vercel etc.
+- Role-based authentication
 
-If using GitHub Pages:
-- Use `gh-pages` package
-- Update `vite.config.js` with `base: '/your-repo-name/'`
+- Responsive design using Tailwind CSS
 
-========================================================
-📞 CONTACT
---------------------------------------------------------
-For support, ideas, or feedback, feel free to raise an issue or connect via GitHub.
+- Simple data persistence with LocalStorage
 
-========================================================
+- Modular and scalable React architecture
+
